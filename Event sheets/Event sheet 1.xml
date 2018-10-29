@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<c2eventsheet>
+    <!--All the 'name' attributes are ignored by Construct 2 - they are there for readability only.-->
+    <name>Event sheet 1</name>
+    <events>
+        <variable constant="0" name="myTime" sid="920053874348683" static="0" type="number">0</variable>
+        <variable constant="0" name="IntendedScale" sid="796858369863769" static="0" type="number">1</variable>
+        <comment>By having an intended scale and gradually moving the actual layer scale towards that value, we can create a smooth zoom based on the car&apos;s speed.</comment>
+        <event-block sid="630798664530105">
+            <conditions>
+                <condition id="-1" name="Every tick" sid="234579187739972" type="System" />
+            </conditions>
+            <actions>
+                <action id="-9" name="Set value" sid="485920524221457" type="System">
+                    <param id="0" name="Variable">IntendedScale</param>
+                    <param id="1" name="Value">1.2 - Car.Car.Speed / 1000</param>
+                </action>
+                <action id="-17" name="Set layer scale" sid="774254139312589" type="System">
+                    <param id="0" name="Layer">&quot;Background&quot;</param>
+                    <param id="1" name="Scale">lerp(LayerScale(&quot;Background&quot;), IntendedScale, 0.01)</param>
+                </action>
+                <action id="-17" name="Set layer scale" sid="110845070787421" type="System">
+                    <param id="0" name="Layer">&quot;Game&quot;</param>
+                    <param id="1" name="Scale">LayerScale(&quot;Background&quot;)</param>
+                </action>
+                <action id="0" name="Set text" sid="249488072187892" type="Score">
+                    <param id="0" name="Text">&quot;Score &quot; &amp; zeropad(int(myTime/60% 60), 1) &amp; &quot;:&quot; &amp; zeropad(int(myTime%60), 2)&#x0D;&#x0A;</param>
+                </action>
+                <action id="0" name="Set text" sid="916140426913795" type="Damage">
+                    <param id="0" name="Text">&quot;Max speed &quot; &amp; Car.Car.MaxSpeed &amp; NewLine &amp; &quot;Acceleration &quot; &amp; Car.Car.Acceleration &amp; NewLine &amp; &quot;Deceleration &quot; &amp; Car.Car.Deceleration &amp; NewLine &amp; &quot;Steer Speed &quot; &amp; Car.Car.SteerSpeed</param>
+                </action>
+                <action id="-10" name="Add to" sid="891953439797954" type="System">
+                    <param id="0" name="Variable">myTime</param>
+                    <param id="1" name="Value">1</param>
+                </action>
+            </actions>
+        </event-block>
+        <event-block sid="335122892739222">
+            <conditions>
+                <condition id="0" name="On collision with another object" sid="858571841249127" type="Car">
+                    <param id="0" name="Object">Bumper</param>
+                </condition>
+            </conditions>
+            <actions>
+                <action behavior="Car" id="4" name="Set max speed" sid="148246990336805" type="Car">
+                    <param id="0" name="Max Speed">round(Car.Car.MaxSpeed/1.1)</param>
+                </action>
+                <action behavior="Car" id="5" name="Set acceleration" sid="106975488031624" type="Car">
+                    <param id="0" name="Acceleration">round(Car.Car.Acceleration/1.01)</param>
+                </action>
+                <action behavior="Car" id="6" name="Set deceleration" sid="786732810574123" type="Car">
+                    <param id="0" name="Deceleration">round(Car.Car.Deceleration/1.1)</param>
+                </action>
+                <action behavior="Car" id="9" name="Set steer speed" sid="286835983019052" type="Car">
+                    <param id="0" name="Steer speed">round(Car.Car.SteerSpeed/1.1)</param>
+                </action>
+            </actions>
+        </event-block>
+        <event-block sid="729655117855961">
+            <conditions>
+                <condition id="0" name="On collision with another object" sid="277369692061541" type="Car">
+                    <param id="0" name="Object">frontCheckpoint</param>
+                </condition>
+            </conditions>
+            <actions>
+                <action id="-13" name="Set boolean" sid="309603721132212" type="frontCheckpoint">
+                    <param id="0" name="Instance variable">passed</param>
+                    <param id="1" name="Value">1</param>
+                </action>
+                <action id="-13" name="Set boolean" sid="721165938100220" type="backCheckpoint">
+                    <param id="0" name="Instance variable">passed</param>
+                    <param id="1" name="Value">0</param>
+                </action>
+            </actions>
+        </event-block>
+        <event-block sid="200262442879296">
+            <conditions>
+                <condition id="0" name="On collision with another object" sid="594058446478058" type="Car">
+                    <param id="0" name="Object">backCheckpoint</param>
+                </condition>
+                <condition id="-8" name="Is boolean instance variable set" sid="559351573532716" type="frontCheckpoint">
+                    <param id="0" name="Instance variable">passed</param>
+                </condition>
+            </conditions>
+            <actions>
+                <action id="-13" name="Set boolean" sid="859250982406432" type="backCheckpoint">
+                    <param id="0" name="Instance variable">passed</param>
+                    <param id="1" name="Value">1</param>
+                </action>
+            </actions>
+        </event-block>
+        <event-block sid="538864281614882">
+            <conditions>
+                <condition id="0" name="On collision with another object" sid="973434149880658" type="Car">
+                    <param id="0" name="Object">Goal</param>
+                </condition>
+                <condition id="-8" name="Is boolean instance variable set" sid="311574000863103" type="backCheckpoint">
+                    <param id="0" name="Instance variable">passed</param>
+                </condition>
+                <condition id="-8" name="Is boolean instance variable set" sid="138298056855177" type="frontCheckpoint">
+                    <param id="0" name="Instance variable">passed</param>
+                </condition>
+            </conditions>
+            <actions>
+                <action id="-11" name="Add to" sid="150823462240905" type="Goal">
+                    <param id="0" name="Instance variable">Laps</param>
+                    <param id="1" name="Value">1</param>
+                </action>
+                <action id="1" name="Append text" sid="347815163122731" type="Laps">
+                    <param id="0" name="Text">&quot;Laps &quot; &amp; Goal.Laps &amp; &quot; &quot; &amp; zeropad(int(myTime/60%60),1) &amp; &quot;:&quot; &amp; zeropad(int(myTime%60),2) &amp; NewLine</param>
+                </action>
+            </actions>
+        </event-block>
+        <event-block sid="450461906940440">
+            <conditions>
+                <condition id="0" name="On collision with another object" sid="353579871816564" type="Car">
+                    <param id="0" name="Object">Goal</param>
+                </condition>
+            </conditions>
+            <actions>
+                <action id="-13" name="Set boolean" sid="157435940871626" type="frontCheckpoint">
+                    <param id="0" name="Instance variable">passed</param>
+                    <param id="1" name="Value">0</param>
+                </action>
+                <action id="-13" name="Set boolean" sid="960240381903861" type="backCheckpoint">
+                    <param id="0" name="Instance variable">passed</param>
+                    <param id="1" name="Value">0</param>
+                </action>
+            </actions>
+        </event-block>
+        <event-block sid="955099696698012">
+            <conditions>
+                <condition id="0" name="On collision with another object" sid="418362965675817" type="Car">
+                    <param id="0" name="Object">Sprite</param>
+                </condition>
+            </conditions>
+            <actions>
+                <action behavior="Car" id="4" name="Set max speed" sid="774772411425814" type="Car">
+                    <param id="0" name="Max Speed">250</param>
+                </action>
+                <action behavior="Car" id="5" name="Set acceleration" sid="369156966672907" type="Car">
+                    <param id="0" name="Acceleration">100</param>
+                </action>
+                <action behavior="Car" id="6" name="Set deceleration" sid="353056148760337" type="Car">
+                    <param id="0" name="Deceleration">100</param>
+                </action>
+                <action behavior="Car" id="9" name="Set steer speed" sid="977229388184191" type="Car">
+                    <param id="0" name="Steer speed">270</param>
+                </action>
+            </actions>
+        </event-block>
+        <event-block sid="739032407949995">
+            <conditions>
+                <condition id="0" name="On key pressed" sid="339375936276289" type="Keyboard">
+                    <param id="0" name="Key">82 (R)</param>
+                </condition>
+            </conditions>
+            <actions>
+                <action id="-21" name="Reset global variables" sid="888774910650812" type="System" />
+                <action behavior="Car" id="5" name="Set acceleration" sid="724303190400586" type="Car">
+                    <param id="0" name="Acceleration">100</param>
+                </action>
+                <action behavior="Car" id="4" name="Set max speed" sid="776308726235086" type="Car">
+                    <param id="0" name="Max Speed">250</param>
+                </action>
+                <action behavior="Car" id="6" name="Set deceleration" sid="637907451024099" type="Car">
+                    <param id="0" name="Deceleration">100</param>
+                </action>
+                <action behavior="Car" id="9" name="Set steer speed" sid="535079321993284" type="Car">
+                    <param id="0" name="Steer speed">270</param>
+                </action>
+                <action id="-13" name="Set boolean" sid="700768823028327" type="frontCheckpoint">
+                    <param id="0" name="Instance variable">passed</param>
+                    <param id="1" name="Value">0</param>
+                </action>
+                <action id="-13" name="Set boolean" sid="206661764651824" type="backCheckpoint">
+                    <param id="0" name="Instance variable">passed</param>
+                    <param id="1" name="Value">0</param>
+                </action>
+                <action id="0" name="Set text" sid="294376539115051" type="Laps">
+                    <param id="0" name="Text">&quot;&quot;</param>
+                </action>
+                <action id="-3" name="Set position" sid="613658015547195" type="Car">
+                    <param id="0" name="X">244</param>
+                    <param id="1" name="Y">1104</param>
+                </action>
+                <action id="-8" name="Set angle" sid="401764530386641" type="Car">
+                    <param id="0" name="Angle">277.258</param>
+                </action>
+                <action behavior="Car" id="0" name="Stop" sid="997664415716986" type="Car" />
+                <action id="-9" name="Set value" sid="941692465522675" type="System">
+                    <param id="0" name="Variable">myTime</param>
+                    <param id="1" name="Value">0</param>
+                </action>
+            </actions>
+        </event-block>
+    </events>
+</c2eventsheet>
